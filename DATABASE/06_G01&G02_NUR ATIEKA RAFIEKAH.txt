@@ -1,0 +1,472 @@
+CREATE DATABASE CHICKENFARM;
+USE CHICKENFARM;
+
+CREATE TABLE Farm(
+    farmID VARCHAR(20) NOT NULL PRIMARY KEY,
+    farmstore VARCHAR(50),
+    coopqnty int,
+    farmtemp Decimal(3,1)
+);
+CREATE TABLE Breed (
+    breedid VARCHAR(5) NOT NULL PRIMARY KEY,
+    breedname VARCHAR(20),
+	Minimumbreedweight DECIMAL(4,1),
+	Maximumbreedweight DECIMAL(4,1)
+);
+CREATE TABLE Chicken(
+    chickenID VARCHAR(20) NOT NULL PRIMARY KEY,
+    chickengender VARCHAR(50),
+    chickenprice int,
+    chickenweight decimal (2,1),
+    farmid varchar(20),
+    breedid varchar(10),
+	Foreign key ( farmid) references FARM( farmid),
+	Foreign key ( breedid) references  breed(  breedid )
+);
+CREATE TABLE Egg(
+    eggNoSeries VARCHAR(20) NOT NULL PRIMARY KEY,
+    eggGrade VARCHAR(2),
+    eggType VARCHAR(10),
+	chickenID VARCHAR(20),
+	Foreign key ( chickenid) references  chicken(chickenid )
+);
+CREATE TABLE Customer (
+     CustomerID VARCHAR(20) NOT NULL PRIMARY KEY,
+    customerName VARCHAR(20),
+    customerAddress VARCHAR(50),
+    customerPhoneNumber VARCHAR(15),
+    farmId VARCHAR(20),
+	Foreign key ( farmid) references FARM( farmid)
+);
+
+CREATE TABLE product (
+	ProductID VARCHAR(20) NOT NULL PRIMARY KEY,
+	ProductType VARCHAR(50),
+	FarmID VARCHAR (20),
+	Price decimal(6,2),
+	Foreign key ( farmid) references FARM( farmid)
+);
+CREATE TABLE Purchase (
+    TransactionID VARCHAR(20) NOT NULL PRIMARY KEY,
+    DatePurchase DATE,
+    CustomerID VARCHAR(20),
+    ProductID VARCHAR(20),
+    Quantity INT,
+    FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID),
+    FOREIGN KEY (ProductID) REFERENCES Product(ProductID)
+);
+CREATE TABLE employee (
+	EmployeeID VARCHAR(10) not null primary key,
+	EmployeeName VARCHAR(30),
+	EmployeeGender VARCHAR (10),
+	EmployeeShift VARCHAR(20),
+	FarmID VARCHAR(20),
+	Foreign key ( farmid) references FARM( farmid)
+);
+CREATE TABLE Supplier (
+    supplierid VARCHAR(5)  PRIMARY KEY,
+    suppliername VARCHAR(20),
+    suppliertype VARCHAR(20),
+    farmid VARCHAR(20),
+	Foreign key (farmid) references FARM( farmid)
+);
+CREATE TABLE medicine (
+    MedicineID VARCHAR(5) PRIMARY KEY,
+    MedicineType VARCHAR(20),
+    MedicineDose VARCHAR(10),
+    SupplierID VARCHAR(5),
+	Foreign key ( SupplierID) references Supplier(SupplierID)
+);
+
+CREATE TABLE food (
+    FoodNoSeries VARCHAR(5) PRIMARY KEY,
+    FoodExpiredDate DATE,
+    FoodType VARCHAR(50),
+    SupplierID VARCHAR(5),
+    FOREIGN KEY (SupplierID) REFERENCES supplier(SupplierID)
+);
+insert into Farm value 
+('FARM001' , 'KL Store' ,'50' , '26.5'), 
+('FARM002','Penang Store','45','27.0'), 
+('FARM003', 'Johor Store', '28' ,'25.5'), 
+('FARM004','Selangor Store',' 55', '26.8'), 
+('FARM005', 'Kedah Store',' 48', '25.5'), 
+('FARM006','Perak Store', '52', '27.2'), 
+('FARM007', 'Sarawak Store' , '40' , '28.0'), 
+('FARM008' , 'KL Store' , '58', '26.5'), 
+('FARM009', 'Perlis Store', '42', '27.5'), 
+('FARM010', 'Pahang Store', '47', '26.0');
+
+INSERT INTO Breed VALUES 
+('B101', 'Turkey', 8.0, 18.0),
+('B102', 'Village Chicken', 0.9, 1.8),
+('B103', 'FreeRange Chicken', 2.7, 2.6),
+('B104', 'Broiler', 1.6, 3.0),
+('B105', 'Sebright Chicken', 8.0, 18.0),
+('B106', 'Barred Plymouth Rock', 0.9, 1.8),
+('B107', 'Silkie Chicken', 2.7, 2.6),
+('B108', 'Barred Plymouth Rock', 1.6, 3.0),
+('B109', 'Rhode Island Red', 8.0, 18.0),
+('B110', 'Serama', 0.9, 1.8);
+
+INSERT INTO Chicken VALUES 
+('ch001', 'Male', 20.5, 2.3, 'FARM001', 'B101'),
+('ch002', 'Female', 25.00, 3.0, 'FARM002', 'B102'),
+('ch003', 'Male', 19.5, 2.1, 'FARM003', 'B103'),
+('ch004', 'Female', 20.5, 2.3, 'FARM004', 'B104'),
+('ch005', 'Male', 16.5, 1.5, 'FARM005', 'B105'),
+('ch006', 'Female', 19.00, 2.0, 'FARM006', 'B106'),
+('ch007', 'Male', 18.00, 1.8, 'FARM007', 'B107'),
+('ch008', 'Female', 20.10, 2.2, 'FARM008', 'B108'),
+('ch009', 'Male', 10.50, 1.2, 'FARM009', 'B109'),
+('ch010', 'Female', 25.00, 3.0, 'FARM010', 'B110'),
+('ch011', 'Male', 19.00, 2.0, 'FARM010', 'B101'),
+('ch012', 'Female', 22.8, 2.6, 'FARM002', 'B102'),
+('ch013', 'Male', 22.3, 2.5, 'FARM003', 'B103'),
+('ch014', 'Female', 17.00, 1.6, 'FARM004', 'B104'),
+('ch015', 'Male', 18.5, 1.9, 'FARM005', 'B105'),
+('ch016', 'Female', 20.5, 2.3, 'FARM006', 'B106'),
+('ch017', 'Male', 24.50, 2.8, 'FARM007', 'B107'),
+('ch018', 'Female', 16.00, 1.4, 'FARM008', 'B108'),
+('ch019', 'Male', 17.5, 1.7, 'FARM009', 'B109'),
+('ch020', 'Female', 17.00, 1.6, 'FARM001', 'B110');
+
+INSERT INTO Egg VALUES 
+('E001', 'AA', 'Brown', 'ch001'),
+('E002', 'AA', 'White', 'ch002'),
+('E003', 'A', 'Brown', 'ch003'),
+('E004', 'A', 'White', 'ch004'),
+('E005', 'B', 'Brown', 'ch005'),
+('E006', 'B', 'White', 'ch006'),
+('E007', 'C', 'Brown', 'ch007'),
+('E008', 'C', 'White', 'ch008'),
+('E009', 'D', 'Brown', 'ch001'),
+('E010', 'D', 'White', 'ch012'),
+('E011', 'AA', 'Brown', 'ch011'),
+('E012', 'AA', 'White', 'ch012'),
+('E013', 'A', 'Brown', 'ch013'),
+('E014', 'A', 'White', 'ch013'),
+('E015', 'B', 'Brown', 'ch015'),
+('E016', 'B', 'White', 'ch016'),
+('E017', 'C', 'Brown', 'ch017'),
+('E018', 'C', 'White', 'ch018'),
+('E019', 'D', 'Brown', 'ch019'),
+('E020', 'D', 'White', 'ch020'),
+('E021', 'AA', 'Brown', 'ch011'),
+('E022', 'AA', 'White', 'ch012'),
+('E023', 'A', 'Brown', 'ch013'),
+('E024', 'A', 'White', 'ch014'),
+('E025', 'B', 'Brown', 'ch015');
+
+INSERT INTO Customer VALUES 
+('C01', 'Ahmad bin Hassan', '12 Jalan Tun Fuad Stephens, Sabah', '012-345-6789', 'FARM001'),
+('C02', 'Siti binti Lim', '45 Jalan Kampung Nelayan, Sarawak', '019-876-5432', 'FARM002'),
+('C03', 'Tan Mei Ling', '78 Jalan Tun Ismail, Johor', '017-234-5678', 'FARM003'),
+('C04', 'Wong Cheng', '90 Jalan Tun Abdul Razak, Pahang', '016-789-0123', 'FARM004'),
+('C05', 'Raja Shah', '33 Jalan Teluk Bahang, Penang', '014-567-8901', 'FARM005'),
+('C06', 'Faridah Abdullah', '67 Jalan Tun Razak, Kuala Lumpur', '013-890-1234', 'FARM006'),
+('C07', 'Lim Wei Hong', '89 Jalan Sultan Ismail, Perak', '011-234-5678', 'FARM007'),
+('C08', 'Nurul Aminah', '22 Jalan Teluk Cempedak, Kelantan', '018-765-4321', 'FARM008'),
+('C09', 'Abdul Rahman', '55 Jalan Tun Hussein, Selangor', '019-321-0987', 'FARM009'),
+('C10', 'Nisha Devi', '88 Jalan Kampung Laut, Terengganu', '012-654-3210', 'FARM010'),
+('C11', 'Rajesh Kumar', '17 Jalan Tun Ali, Kedah', '016-098-7654', 'FARM001'),
+('C12', 'Aisha Abdullah', '25 Jalan Dato Onn, Melaka', '013-543-2109', 'FARM002'),
+('C13', 'Lim Wei Xiang', '37 Jalan Tanjung Lipat, Sabah', '011-876-5432', 'FARM003'),
+('C14', 'Nurul Husna', '44 Jalan Tunku Abdul Rahman, Sarawak', '017-234-5678', 'FARM004'),
+('C15', 'Hafiz bin Ismail', '61 Jalan Bunga Raya, Johor', '019-765-4321', 'FARM005'),
+('C16', 'Wong Li Ming', '73 Jalan Sultan Ahmad Shah, Pahang', '014-321-0987', 'FARM006'),
+('C17', 'Tan Siew Peng', '82 Jalan Kebun Sultan, Penang', '012-654-3210', 'FARM007'),
+('C18', 'Sharvin Raj', '93 Jalan Ipoh, Kuala Lumpur', '016-098-7654', 'FARM008'),
+('C19', 'Liew Wei Xuan', '29 Jalan Bukit Melaka, Perak', '013-543-2109', 'FARM010'),
+('C20', 'Nurul Ain', '48 Jalan Bukit Tunggal, Kelantan', '011-876-5432', 'FARM002');
+
+INSERT INTO Product VALUES 
+('P101', 'Lives Chicken', 'FARM001', 9.00),
+('P202', 'Frozen Chicken', 'FARM002', 15.00),
+('P303', 'Egg', 'FARM003', 0.50),
+('P401', 'Coop Cleaners', 'FARM004', 27.00),
+('P502', 'Poultry Feed', 'FARM005', 130.00),
+('P603', 'Waste Management', 'FARM006', 150.50),
+('P701', 'Heat Lamps', 'FARM007', 40.00),
+('P802', 'Egg Collection Baskets', 'FARM008', 15.00),
+('P903', 'Pest Control Supplies', 'FARM009', 90.00),
+('P1001', 'Nesting Boxes', 'FARM010', 70.00);
+
+INSERT INTO Purchase  VALUES
+('T01', '2023-12-31', 'C01', 'P101', 3),
+('T02', '2023-12-31', 'C01', 'P202', 8),
+('T03', '2023-02-28', 'C04', 'P303', 20),
+('T04', '2023-10-20', 'C02', 'P401', 1),
+('T05', '2023-10-10', 'C02', 'P502', 2),
+('T06', '2023-12-05', 'C05', 'P603', 1),
+('T07', '2023-03-15', 'C03', 'P701', 2),
+('T08', '2023-09-30', 'C06', 'P802', 2),
+('T09', '2023-04-25', 'C07', 'P903', 3),
+('T10', '2023-11-01', 'C08', 'P1001', 4),
+('T11', '2023-01-18', 'C09', 'P101', 14),
+('T12', '2023-11-30', 'C10', 'P202', 5),
+('T13', '2023-05-05', 'C11', 'P303', 23),
+('T14', '2023-10-15', 'C12', 'P401', 1),
+('T15', '2023-02-10', 'C12', 'P502', 2),
+('T16', '2023-12-20', 'C14', 'P603', 1),
+('T17', '2023-10-13', 'C15', 'P701', 1),
+('T18', '2023-12-31', 'C16', 'P802', 3),
+('T19', '2023-03-01', 'C18', 'P903', 2),
+('T20', '2023-11-25', 'C19', 'P1001', 3),
+('T21', '2023-11-15', 'C20', 'P101', 3),
+('T22', '2023-02-26', 'C20', 'P202', 2),
+('T23', '2023-03-19', 'C14', 'P401', 2),
+('T24', '2023-05-09', 'C07', 'P1001', 1),
+('T25', '2023-09-22', 'C14', 'P701', 1),
+('T26', '2023-10-13', 'C05', 'P802', 1),
+('T27', '2023-11-29', 'C02', 'P603', 2);
+
+INSERT INTO Employee VALUES 
+('E1001', 'Emran bin Hassan', 'Male', 'Day Shift', 'FARM001'),
+('E1002', 'Azalea binti Abdullah', 'Female', 'Night Shift', 'FARM002'),
+('E1003', 'Tan Wei Jie', 'Male', 'Evening Shift', 'FARM003'),
+('E1004', 'Nor Aishah', 'Female', 'Day Shift', 'FARM004'),
+('E1005', 'Mohd Azlan', 'Male', 'Night Shift', 'FARM005'),
+('E1006', 'Lim Mei Ling', 'Female', 'Evening Shift', 'FARM006'),
+('E1007', 'Raj Kumar', 'Male', 'Day Shift', 'FARM007'),
+('E1008', 'Anisah Abdullah', 'Female', 'Night Shift', 'FARM008'),
+('E1009', 'Lee Kah Wai', 'Male', 'Evening Shift', 'FARM009'),
+('E1010', 'Nurul Huda', 'Female', 'Day Shift', 'FARM010'),
+('E1011', 'Tan Kok Leong', 'Male', 'Night Shift', 'FARM001'),
+('E1012', 'Tan Mei Yen', 'Female', 'Evening Shift', 'FARM002'),
+('E1013', 'Arul Raj', 'Male', 'Day Shift', 'FARM003'),
+('E1014', 'Wong Mei Lin', 'Female', 'Night Shift', 'FARM004'),
+('E1015', 'Lim Wei Shen', 'Male', 'Evening Shift', 'FARM005'),
+('E1016', 'Nurul Syafiqah', 'Female', 'Day Shift', 'FARM006'),
+('E1017', 'Ganesh Kumar', 'Male', 'Night Shift', 'FARM007'),
+('E1018', 'Hafizah Mohd Isa', 'Female', 'Evening Shift', 'FARM008'),
+('E1019', 'Ahmad Farid', 'Male', 'Day Shift', 'FARM009'),
+('E1020', 'Mei Mei', 'Female', 'Night Shift', 'FARM010');
+
+INSERT INTO Supplier VALUES 
+('S01', 'MediCure', 'Medicine', 'FARM001'),
+('S02', 'XYZ Foods', 'Food', 'FARM002'),
+('S03', 'EcoBite', 'Food', 'FARM003'),
+('S04', 'PoultryPro', 'Chicken', 'FARM004'),
+('S05', 'NutriFeeds', 'Chicken', 'FARM005'),
+('S06', 'EcoBite', 'Food', 'FARM006'),
+('S07', 'MediCure', 'Medicine', 'FARM007'),
+('S08', 'PharmaHealth', 'Medicine', 'FARM008'),
+('S09', 'XYZ Foods', 'Food', 'FARM009'),
+('S10', 'PoultryPro', 'Chicken', 'FARM010'),
+('S11', 'NutriFeeds', 'Chicken', 'FARM001'),
+('S12', 'PharmaHealth', 'Medicine', 'FARM002'),
+('S13', 'MediCure', 'Medicine', 'FARM003'),
+('S14', 'XYZ Foods', 'Food', 'FARM004'),
+('S15', 'PharmaHealth', 'Medicine', 'FARM005'),
+('S16', 'PoultryPro', 'Chicken', 'FARM006'),
+('S17', 'NutriFeeds', 'Chicken', 'FARM007'),
+('S18', 'EcoBite', 'Food', 'FARM008'),
+('S19', 'MediCure', 'Medicine', 'FARM009'),
+('S20', 'XYZ Foods', 'Food', 'FARM010');
+
+INSERT INTO Medicine VALUES 
+('M01', 'Vaccine', 50, 'S01'),
+('M02', 'Antibiotic', 25, 'S03'),
+('M03', 'Sanitation', 5, 'S07'),
+('M04', 'Vaccine', 75, 'S05'),
+('M05', 'Antibiotic', 30, 'S09'),
+('M06', 'Sanitation', 10, 'S08'),
+('M07', 'Vaccine', 60, 'S02'),
+('M08', 'Antibiotic', 20, 'S01'),
+('M09', 'Sanitation', 8, 'S02'),
+('M010', 'Vaccine', 40, 'S03'),
+('M011', 'Antibiotic', 15, 'S05'),
+('M012', 'Sanitation', 6, 'S08'),
+('M013', 'Vaccine', 55, 'S09'),
+('M014', 'Antibiotic', 22, 'S01'),
+('M015', 'Sanitation', 7, 'S03'),
+('M016', 'Vaccine', 70, 'S01'),
+('M017', 'Antibiotic', 18, 'S01'),
+('M018', 'Sanitation', 9, 'S03'),
+('M019', 'Vaccine', 45, 'S01'),
+('M020', 'Antibiotic', 12, 'S01');
+
+INSERT INTO Food VALUES 
+('F001', '2026-12-31', 'Chicken Pellets', 'S02'),
+('F002', '2026-11-15', 'Chicken Grains', 'S06'),
+('F003', '2026-02-28', 'Chicken Worms', 'S14'),
+('F004', '2026-10-20', 'Chicken Insects Mix', 'S18'),
+('F005', '2026-10-10', 'Chicken Seeds', 'S20'),
+('F006', '2026-12-05', 'Chicken Sunflower Seeds', 'S09'),
+('F007', '2026-03-15', 'Chicken Oats', 'S13'),
+('F008', '2026-09-30', 'Chicken Millet', 'S02'),
+('F009', '2026-04-25', 'Chicken Rice', 'S06'),
+('F010', '2026-11-01', 'Chicken Millet', 'S09'),
+('F011', '2026-01-18', 'Chicken Rice', 'S13'),
+('F012', '2026-11-30', 'Chicken Pumpkin Seeds', 'S14'),
+('F013', '2026-05-05', 'Chicken Oats', 'S18'),
+('F014', '2026-10-15', 'Chicken Sunflower Seeds', 'S20'),
+('F015', '2026-02-10', 'Chicken Rice', 'S02'),
+('F016', '2026-12-20', 'Chicken Seeds', 'S09'),
+('F017', '2026-10-13', 'Chicken Pellets', 'S06'),
+('F018', '2026-12-31', 'Chicken Worms', 'S13'),
+('F019', '2026-03-01', 'Chicken Grains', 'S02'),
+('F020', '2026-11-25', 'Chicken Insects Mix', 'S02');
+
+
+
+Question : The Chicken price for ch002 has change to RM20.00 since the weight have been change to 2.1 kg. Update the table with the new information.
+UPDATE Chicken
+SET  chickenprice = '20.00' , chickenweight= '2.1' 
+WHERE chickenID = 'ch002' ;
+
+Question : change the expiry date at table food to 2026-11-10 since the supplier have miswrote it .
+Update food
+Set FoodExpiredDate = '2026-11-10'
+WHERE FoodNoSeries = 'F010';
+
+Question:  Add a new column into farm table called FarmSize to get the overview of the area in each farm in unit Hectares:
+ALTER Table farm
+ADD FarmSize int; 
+
+UPDATE Farm
+SET Farmsize = 20 WHERE FarmID = 'FARM001';
+UPDATE Farm
+SET Farmsize = 18 WHERE FarmID = 'FARM002';
+UPDATE Farm
+SET Farmsize = 11 WHERE FarmID = 'FARM003';
+UPDATE Farm
+SET Farmsize = 22 WHERE FarmID = 'FARM004';
+UPDATE Farm
+SET Farmsize = 19 WHERE FarmID = 'FARM005';
+UPDATE Farm
+SET Farmsize = 21 WHERE FarmID = 'FARM006';
+UPDATE Farm
+SET Farmsize = 16 WHERE FarmID = 'FARM007';
+UPDATE Farm
+SET Farmsize = 23 WHERE FarmID = 'FARM008';
+UPDATE Farm
+SET Farmsize = 17 WHERE FarmID = 'FARM009';
+UPDATE Farm
+SET Farmsize = 19 WHERE FarmID = 'FARM010';
+
+Question : It has been determined that the employee ‘E002’ is no longer employed by the company, please delete the information about the employee to keep the operational efficiency.
+DELETE FROM Employee WHERE 
+EmployeeID='E1002';
+select * from Employee;
+
+Question:Display the chickens that weight more than 2.5kg
+select chickenid, chickenweight
+from chicken
+where chickenweight >2.5;
+
+Question: Retrieve the names of customers who made a purchase before  April 1, 2023, and also find the total quantity of products they have purchased.
+SELECT c.customerName, sum(p.Quantity) as 'Total Quantity', p.datepurchase
+FROM Customer c, Purchase p
+WHERE C.CustomerID = P.CustomerID
+and p.DatePurchase < '2023-04-01'
+group by  p.TransactionID
+order by p.Quantity desc;
+
+Question: Retrieve the names of customers who have made more than one  purchase after 1 October  2023. List the customer names along with the count of their purchases. 
+SELECT customerName, COUNT(TransactionID) as PurchaseCount
+FROM Customer
+JOIN Purchase ON Customer.CustomerID = Purchase.CustomerID
+WHERE DatePurchase > '2023-10-01'
+GROUP BY customerName
+HAVING PurchaseCount > 1;
+
+Question: Display the addresses of customers located in Pahang from the customer table.
+SELECT c.customerAddress
+FROM customer c
+WHERE c.customerAddress like ‘%Pahang’
+GROUP BY c.customerAddress;
+
+Question : Retrieve the names of all food items and their expiration dates where the expiration date is between '2026-01-01' and '2026-06-30'.
+SELECT FoodType, FoodExpiredDate
+FROM Food
+WHERE FoodExpiredDate 
+BETWEEN '2026-01-01' AND '2026-06-30'
+ORDER BY FoodExpiredDate ASC;
+
+Question: Display the employee named Tan Wei Jie who work on evening shift and male.
+SELECT * FROM Employee
+WHERE EmployeeName = 'Tan Wei Jie'
+AND EmployeeShift = 'Evening Shift'
+AND EmployeeGender = 'Male';
+
+Question : Emran bin Hassan want to collect only egg which is grade A or grade AA . Please help Emran identify which chicken has egg grade A or grade AA 
+SELECT chickenID , eggGrade 
+FROM Egg 
+WHERE eggGrade='AA' OR eggGrade='A';
+
+Question : Display the customer name, total quantity and date of their purchase where in month November and December, sort with the highest of the quantity purchased.
+SELECT c.customerName, sum(p.Quantity) as 'Total Quantity', p.datepurchase
+FROM Customer c, Purchase p
+WHERE C.CustomerID = P.CustomerID
+and p.DatePurchase > '2023-11-01'
+group by  p.TransactionID
+order by p.Quantity desc;
+
+Question : In order to observe the egg quality across the farm, display egg count for each grade. 
+select e.egggrade as 'Egg Grade', count(c.chickenid) as 'Total chicken'
+from chicken c, egg e
+where c.chickenid=e.chickenid
+group by e.egggrade
+order by count(c.chickenid) desc;
+
+Question : Display the total price by calculating for each purchase transaction by multiplying the quantity of products purchased by their respective prices.
+select pu.TransactionId, pro.productid,pu.quantity, 
+pro.price as 'price per unit', 
+sum(pu.quantity*pro.price) as totalprice
+from purchase pu, product pro
+where pu.productid=pro.productid
+group by pu.TransactionId;
+
+Question: Display quantity of chicken breed based on breed name in descending order
+SELECT b.breedname, COUNT(c.chickenid) as Quantity
+FROM chicken c, breed b
+WHERE c.breedid = b.breedid
+GROUP BY b.breedname
+ORDER BY Quantity DESC;
+
+Question : Display Chicken‘s weight by their highest weight.
+SELECT count(b.BreedName) as breed, c.chickenid, MAX( chickenweight ) as Highest_Weight 
+FROM breed b , chicken c  
+Where b.breedid=c.breedid 
+group by b.BreedName , c.chickenid
+order by Highest_Weight  desc;
+
+Question : Display Chicken‘s weight by their lowest weight.
+SELECT count(b.BreedName) as breed, c.chickenid,  MIN( chickenweight ) as Lowest_Weight 
+FROM breed b, chicken c  
+Where b.breedid=c.breedid 
+group by b.BreedName , c.chickenid
+order by Lowest_Weight  asc;
+
+Question : Display the breed and their average weight 
+SELECT b.BreedName as breed,  Avg( chickenweight ) as Average_Weight 
+FROM breed b , chicken c  
+Where b.breedid=c.breedid 
+group by b.BreedName ;
+
+Question: Calculate total price for cutomer that purchase any product based on purchase price and quantity.
+SELECT c.customerid, c.customername, SUM(pu.quantity * pro.price) AS totalprice
+FROM customer c, purchase pu, product pro
+WHERE c.customerid IN (
+    SELECT DISTINCT pu.customerid
+    FROM purchase pu
+)
+and  c.customerid = pu.customerid
+and  pu.productid = pro.productid
+GROUP BY c.customerid, c.customername
+ORDER BY totalprice DESC;
+
+Question: Retrieve the names of all employees who work in farms located in Selangor and made a purchase after November 1, 2023.
+SELECT distinct(P.datepurchase ), E.EmployeeName
+FROM Employee E, Purchase P
+WHERE DatePurchase > '2023-11-01' 
+And FarmID IN ( 
+    SELECT FarmID 
+    FROM Farm 
+    WHERE farmstore LIKE '%Selangor%'
+)
+order by P.datepurchase asc;
+
+
